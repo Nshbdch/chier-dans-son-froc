@@ -352,9 +352,9 @@ body {
    FLASH D'ÉCLAIR
    ================================================================= */
 .lightning {
-  position: fixed;
+  position: absolute;
   inset: 0;
-  z-index: 8500;
+  z-index: 3;
   pointer-events: none;
   background: rgba(232, 224, 212, 0);
   mix-blend-mode: screen;
@@ -2113,6 +2113,65 @@ h1.display-title .line-3 {
   50%      { transform: scaleX(var(--dir)) rotate(90deg) translateY(-25px) scale(1.03); }
 }
 
+.vampire-guy[data-state="transforming"] {
+  pointer-events: none;
+}
+.vampire-guy[data-state="transforming"] .vampire-svg {
+  animation: vampire-dissolve 1s cubic-bezier(.25, .8, .25, 1) forwards;
+}
+.vampire-guy[data-state="reforming"] {
+  pointer-events: none;
+}
+.vampire-guy[data-state="reforming"] .vampire-svg {
+  animation: vampire-reform 0.85s cubic-bezier(.22, 1.2, .36, 1) forwards;
+}
+.vampire-guy[data-state="transforming"] .guy-counter,
+.vampire-guy[data-state="reforming"] .guy-counter {
+  opacity: 0;
+}
+@keyframes vampire-dissolve {
+  0%   { opacity: 1; filter: drop-shadow(0 8px 14px rgba(0,0,0,0.5)) blur(0); transform: scaleX(var(--dir)) scale(1); }
+  35%  { opacity: 0.86; filter: drop-shadow(0 0 20px rgba(196,30,58,0.6)) blur(1px); transform: scaleX(var(--dir)) scale(1.08) translateY(-4px); }
+  100% { opacity: 0; filter: drop-shadow(0 0 30px rgba(0,0,0,0.8)) blur(6px); transform: scaleX(var(--dir)) scale(0.18) translateY(-22px); }
+}
+@keyframes vampire-reform {
+  0%   { opacity: 0; filter: drop-shadow(0 0 30px rgba(0,0,0,0.8)) blur(6px); transform: scaleX(var(--dir)) scale(0.18) translateY(-22px); }
+  55%  { opacity: 0.9; filter: drop-shadow(0 0 22px rgba(196,30,58,0.5)) blur(1px); transform: scaleX(var(--dir)) scale(1.08) translateY(-4px); }
+  100% { opacity: 1; filter: drop-shadow(0 8px 14px rgba(0,0,0,0.5)) blur(0); transform: scaleX(var(--dir)) scale(1); }
+}
+
+.vampire-transform-bat {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 9100;
+  width: var(--bat-size);
+  height: calc(var(--bat-size) * 0.58);
+  pointer-events: none;
+  opacity: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 80 46' xmlns='http://www.w3.org/2000/svg'><path d='M40 22 C31 4 21 2 12 14 C7 8 3 7 0 7 C7 15 10 25 11 37 C18 29 25 31 34 42 C36 34 38 29 40 27 C42 29 44 34 46 42 C55 31 62 29 69 37 C70 25 73 15 80 7 C77 7 73 8 68 14 C59 2 49 4 40 22 Z' fill='%23050308'/><path d='M36 23 C38 20 42 20 44 23 C43 28 37 28 36 23 Z' fill='%234a0610'/></svg>");
+  background-repeat: no-repeat;
+  background-size: contain;
+  filter: drop-shadow(0 6px 10px rgba(0,0,0,0.6));
+  animation: vampire-bat-out var(--bat-duration) cubic-bezier(.2, .65, .25, 1) forwards;
+  animation-delay: var(--bat-delay);
+}
+.vampire-transform-bat.returning {
+  animation-name: vampire-bat-return;
+}
+@keyframes vampire-bat-out {
+  0%   { opacity: 0; transform: translate3d(var(--start-x), var(--start-y), 0) rotate(var(--bat-rot)) scale(0.45); }
+  16%  { opacity: 0.95; }
+  58%  { opacity: 1; transform: translate3d(var(--mid-x), var(--mid-y), 0) rotate(var(--bat-mid-rot)) scale(var(--bat-scale)); }
+  100% { opacity: 0; transform: translate3d(var(--end-x), var(--end-y), 0) rotate(var(--bat-end-rot)) scale(0.75); }
+}
+@keyframes vampire-bat-return {
+  0%   { opacity: 0; transform: translate3d(var(--end-x), var(--end-y), 0) rotate(var(--bat-return-rot)) scale(0.75); }
+  14%  { opacity: 0.95; }
+  68%  { opacity: 1; transform: translate3d(var(--mid-x), var(--mid-y), 0) rotate(var(--bat-return-mid-rot)) scale(var(--bat-scale)); }
+  100% { opacity: 0; transform: translate3d(var(--start-x), var(--start-y), 0) rotate(var(--bat-rot)) scale(0.35); }
+}
+
 /* Animation "drink" quand on lui donne du sang */
 .vampire-guy[data-action="drinking"] .vampire-chalice {
   animation: drink-chalice 0.8s ease-in-out;
@@ -2336,6 +2395,41 @@ h1.display-title .line-3 {
 }
 @keyframes confetti-fall {
   to { transform: translateY(110vh) rotate(900deg); opacity: 0; }
+}
+
+.bat-flood-bat {
+  position: fixed;
+  left: var(--start-x);
+  top: var(--start-y);
+  z-index: 9100;
+  width: var(--bat-size);
+  height: calc(var(--bat-size) * 0.58);
+  pointer-events: none;
+  opacity: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 80 46' xmlns='http://www.w3.org/2000/svg'><path d='M40 22 C31 4 21 2 12 14 C7 8 3 7 0 7 C7 15 10 25 11 37 C18 29 25 31 34 42 C36 34 38 29 40 27 C42 29 44 34 46 42 C55 31 62 29 69 37 C70 25 73 15 80 7 C77 7 73 8 68 14 C59 2 49 4 40 22 Z' fill='%23050308'/><path d='M36 23 C38 20 42 20 44 23 C43 28 37 28 36 23 Z' fill='%234a0610'/></svg>");
+  background-repeat: no-repeat;
+  background-size: contain;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.55));
+  animation: bat-flood-surge var(--bat-duration) cubic-bezier(.2, .65, .25, 1) forwards;
+  animation-delay: var(--bat-delay);
+}
+
+@keyframes bat-flood-surge {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(var(--bat-rot)) scale(0.55);
+  }
+  12% {
+    opacity: 0.94;
+  }
+  50% {
+    opacity: 1;
+    transform: translate3d(calc(var(--travel-x) * 0.52), var(--mid-y), 0) rotate(calc(var(--bat-rot) * -0.4)) scale(var(--bat-scale));
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--travel-x), var(--end-y), 0) rotate(calc(var(--bat-rot) * 0.9)) scale(0.75);
+  }
 }
 
 /* =================================================================
@@ -2855,6 +2949,9 @@ body.demonic-happening .demonic-veil {
         <path d="M0 200 L0 130 L50 130 L60 110 L70 130 L120 130 L120 90 L140 80 L160 90 L160 130 L220 130 L240 100 L260 130 L320 130 L320 70 L340 60 L360 70 L360 130 L420 130 L420 100 L450 90 L480 100 L480 130 L540 130 L540 60 L555 40 L570 30 L585 40 L600 60 L600 130 L660 130 L680 100 L700 130 L760 130 L760 80 L780 70 L800 80 L800 130 L860 130 L880 110 L900 130 L960 130 L960 95 L985 85 L1010 95 L1010 130 L1070 130 L1085 105 L1100 130 L1150 130 L1150 120 L1200 120 L1200 200 Z" fill="#000"/>
       </svg>
     </div>
+
+    <!-- Flash d'éclair limité au décor de fond -->
+    <div class="lightning" id="lightning" aria-hidden="true"></div>
   </div>
 
   <!-- Brouillard animé -->
@@ -2869,9 +2966,6 @@ body.demonic-happening .demonic-veil {
 
   <!-- Layer pour jump scares et effets dramatiques -->
   <div class="scare-layer" id="scare-layer" aria-hidden="true"></div>
-
-  <!-- Flash d'éclair plein écran -->
-  <div class="lightning" id="lightning" aria-hidden="true"></div>
 
   <!-- Trail curseur (desktop) -->
   <canvas class="cursor-trail" id="cursor-trail" aria-hidden="true"></canvas>
@@ -3920,6 +4014,9 @@ function toast(message) {
    AUDIO · sons d'ambiance
    ============================================================ */
 let audioCtx = null;
+const HOWL_AUDIO_SRC = new URL("Effet sonore loup.mp3", window.location.href).href;
+let howlAudio = null;
+
 function getAudio() {
   if (!audioCtx) {
     try {
@@ -3967,6 +4064,22 @@ function playMunch() {
 }
 
 function playHowl() {
+  try {
+    if (!howlAudio) {
+      howlAudio = new Audio(HOWL_AUDIO_SRC);
+      howlAudio.preload = "auto";
+      howlAudio.volume = 0.9;
+    }
+    howlAudio.pause();
+    howlAudio.currentTime = 0;
+    howlAudio.play().catch(() => playSyntheticHowl());
+    return;
+  } catch (e) {
+    playSyntheticHowl();
+  }
+}
+
+function playSyntheticHowl() {
   const ctx = getAudio();
   if (!ctx) return;
   if (ctx.state === "suspended") ctx.resume();
@@ -4058,6 +4171,7 @@ const vampire = {
   decisionInterval: 4000,
   drinkingTimer: null,
   sleepTimer: null,
+  transforming: false,
   reduced: false
 };
 
@@ -4084,14 +4198,14 @@ const VAMPIRE_MESSAGES = {
     "*chante en roumain faux*"
   ],
   4: [
-    "Zzzz… 💤",
-    "Il dort dans son cercueil.",
-    "Rêve de sang noble…",
-    "Schhh, le soleil se lève."
+    "Trop de sang… transformation !",
+    "Mes crocs appellent la nuée.",
+    "Je deviens la nuit.",
+    "Reculez, ça va battre des ailes."
   ],
   wake: [
-    "Hein ?! C'est encore la nuit ?",
-    "Bună… j'ai dormi un siècle.",
+    "Bună… reformé et prêt.",
+    "Je remarche. Très digne.",
     "Un peu de sang frais ?"
   ]
 };
@@ -4143,7 +4257,7 @@ function vampireSetState(s) {
 
 function vampireLoop(t) {
   if (!vampire.el) return;
-  if (vampire.state === "sleeping") {
+  if (vampire.state === "sleeping" || vampire.state === "transforming" || vampire.state === "reforming") {
     vampire.rafId = requestAnimationFrame(vampireLoop);
     return;
   }
@@ -4178,6 +4292,7 @@ function vampireLoop(t) {
 }
 
 function vampireOnClick() {
+  if (vampire.transforming || vampire.state === "transforming" || vampire.state === "reforming") return;
   if (vampire.state === "sleeping") { vampireWakeUp(); return; }
   vampireDrink();
 }
@@ -4196,7 +4311,7 @@ function vampireDrink() {
     const newDrunk = drunkMap[Math.min(vampire.bloods, 5)];
     if (newDrunk !== vampire.drunk) {
       vampire.drunk = newDrunk;
-      if (vampire.drunk >= 4) { vampireSleep(); return; }
+      if (vampire.drunk >= 4) { vampireTransform(); return; }
       vampireApplyState();
     }
     const msgs = VAMPIRE_MESSAGES[vampire.drunk] || VAMPIRE_MESSAGES[0];
@@ -4205,19 +4320,90 @@ function vampireDrink() {
 }
 
 function vampireSleep() {
-  vampireSetState("sleeping");
-  sayBubble(vampire.el, VAMPIRE_MESSAGES[4][Math.floor(Math.random() * VAMPIRE_MESSAGES[4].length)], "Quentibus 2K");
-  clearTimeout(vampire.sleepTimer);
-  vampire.sleepTimer = setTimeout(() => {
-    if (vampire.state === "sleeping") vampireWakeUp();
-  }, 15000);
+  vampireTransform();
 }
 
 function vampireWakeUp() {
   clearTimeout(vampire.sleepTimer);
-  vampire.drunk = 1;
+  vampire.bloods = 0;
+  vampire.drunk = 0;
+  vampire.transforming = false;
+  if (vampire.countEl) vampire.countEl.textContent = "0";
+  vampire.el?.querySelector(".guy-counter")?.classList.remove("show");
   vampireSetState("walking");
   sayBubble(vampire.el, VAMPIRE_MESSAGES.wake[Math.floor(Math.random() * VAMPIRE_MESSAGES.wake.length)], "Quentibus 2K");
+}
+
+function vampireTransform() {
+  if (!vampire.el || vampire.transforming) return;
+  vampire.transforming = true;
+  clearTimeout(vampire.sleepTimer);
+  vampire.el.removeAttribute("data-action");
+  sayBubble(vampire.el, VAMPIRE_MESSAGES[4][Math.floor(Math.random() * VAMPIRE_MESSAGES[4].length)], "Quentibus 2K");
+
+  if (vampire.reduced) {
+    vampireWakeUp();
+    return;
+  }
+
+  vampireSetState("transforming");
+  playHowl();
+  setTimeout(() => spawnVampireBatSwarm("out"), 120);
+  setTimeout(() => {
+    vampireSetState("reforming");
+    spawnVampireBatSwarm("return");
+  }, 3000);
+  vampire.sleepTimer = setTimeout(() => {
+    vampireWakeUp();
+  }, 4300);
+}
+
+function spawnVampireBatSwarm(mode = "out") {
+  const layer = document.querySelector("#scare-layer") || document.body;
+  if (!vampire.el || !layer) return;
+  const rect = vampire.el.getBoundingClientRect();
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height * 0.42;
+  const isMobile = window.innerWidth < 720;
+  const count = mode === "return" ? (isMobile ? 42 : 72) : (isMobile ? 58 : 96);
+  const dir = vampire.dir >= 0 ? 1 : -1;
+
+  for (let i = 0; i < count; i += 1) {
+    const bat = document.createElement("span");
+    bat.className = `vampire-transform-bat${mode === "return" ? " returning" : ""}`;
+
+    const spread = mode === "return" ? 46 : 34;
+    const startX = centerX + (Math.random() - 0.5) * spread;
+    const startY = centerY + (Math.random() - 0.5) * spread;
+    const endSide = Math.random() < 0.72 ? dir : -dir;
+    const endX = endSide > 0
+      ? window.innerWidth + 80 + Math.random() * 260
+      : -120 - Math.random() * 260;
+    const endY = -40 + Math.random() * (window.innerHeight + 80);
+    const midX = (startX + endX) / 2 + (Math.random() - 0.5) * 260;
+    const midY = (startY + endY) / 2 + (Math.random() - 0.5) * 240;
+    const size = isMobile ? 16 + Math.random() * 24 : 18 + Math.random() * 38;
+    const rot = -28 + Math.random() * 56;
+
+    bat.style.setProperty("--start-x", `${startX}px`);
+    bat.style.setProperty("--start-y", `${startY}px`);
+    bat.style.setProperty("--mid-x", `${midX}px`);
+    bat.style.setProperty("--mid-y", `${midY}px`);
+    bat.style.setProperty("--end-x", `${endX}px`);
+    bat.style.setProperty("--end-y", `${endY}px`);
+    bat.style.setProperty("--bat-size", `${size}px`);
+    bat.style.setProperty("--bat-scale", String(0.75 + Math.random() * 1.35));
+    bat.style.setProperty("--bat-rot", `${rot}deg`);
+    bat.style.setProperty("--bat-mid-rot", `${rot * -0.5}deg`);
+    bat.style.setProperty("--bat-end-rot", `${rot * 0.8}deg`);
+    bat.style.setProperty("--bat-return-rot", `${rot * -0.7}deg`);
+    bat.style.setProperty("--bat-return-mid-rot", `${rot * 0.45}deg`);
+    bat.style.setProperty("--bat-delay", `${Math.random() * (mode === "return" ? 0.65 : 1.05)}s`);
+    bat.style.setProperty("--bat-duration", `${mode === "return" ? 1.55 + Math.random() * 0.75 : 2.1 + Math.random() * 1.35}s`);
+    layer.appendChild(bat);
+
+    setTimeout(() => bat.remove(), mode === "return" ? 3200 : 4600);
+  }
 }
 
 /* ============================================================
@@ -4377,16 +4563,52 @@ function bearExplode() {
 }
 
 /* ============================================================
-   HURLEMENT + CONFETTI
+   HURLEMENT + MARÉE DE CHAUVES-SOURIS
    ============================================================ */
 function setupHowl() {
   const button = document.querySelector("#howl-mode");
   if (!button) return;
   button.addEventListener("click", () => {
-    toast("AAAOOOUUUUH ! Les loups vous saluent 🐺");
+    toast("AAAOOOUUUUH ! La nuit se réveille.");
     playHowl();
-    burstConfetti(50);
+    launchBatFlood();
   });
+}
+
+function launchBatFlood(count) {
+  if (fx.prefersReduced) return;
+  const layer = document.querySelector("#scare-layer") || document.body;
+  const isMobile = window.innerWidth < 720;
+  const total = count || (isMobile ? 52 : 92);
+  const fromLeft = Math.random() < 0.5;
+
+  for (let i = 0; i < total; i += 1) {
+    const bat = document.createElement("span");
+    bat.className = "bat-flood-bat";
+
+    const startX = fromLeft ? -90 - Math.random() * 180 : window.innerWidth + 40 + Math.random() * 180;
+    const travelX = fromLeft
+      ? window.innerWidth + 220 + Math.random() * 260
+      : -(window.innerWidth + 220 + Math.random() * 260);
+    const startY = -30 + Math.random() * (window.innerHeight + 60);
+    const midY = `${(Math.random() - 0.5) * 220}px`;
+    const endY = `${(Math.random() - 0.5) * 360}px`;
+    const size = isMobile ? 18 + Math.random() * 30 : 22 + Math.random() * 46;
+
+    bat.style.setProperty("--start-x", `${startX}px`);
+    bat.style.setProperty("--start-y", `${startY}px`);
+    bat.style.setProperty("--travel-x", `${travelX}px`);
+    bat.style.setProperty("--mid-y", midY);
+    bat.style.setProperty("--end-y", endY);
+    bat.style.setProperty("--bat-size", `${size}px`);
+    bat.style.setProperty("--bat-scale", String(0.75 + Math.random() * 1.25));
+    bat.style.setProperty("--bat-rot", `${fromLeft ? -18 + Math.random() * 36 : 162 + Math.random() * 36}deg`);
+    bat.style.setProperty("--bat-delay", `${Math.random() * 1.35}s`);
+    bat.style.setProperty("--bat-duration", `${2.4 + Math.random() * 2.3}s`);
+    layer.appendChild(bat);
+
+    setTimeout(() => bat.remove(), 6200);
+  }
 }
 
 function burstConfetti(count) {
@@ -4430,7 +4652,7 @@ function setupKeyboardEgg() {
     if (buffer === sequence) {
       toast("⌨️ Vlad t'a entendu… il arrive.");
       playHowl();
-      burstConfetti(70);
+      launchBatFlood(110);
       buffer = "";
     }
   });
@@ -4833,7 +5055,7 @@ playHowl = function() { safePlay(_origPlayHowl); };
 
 /* ============================================================
    GROUPES DE CHAUVES-SOURIS DEVANT LA LUNE
-   Un essaim de 5-9 chauves-souris traverse l'écran, avec une
+   Un essaim de chauves-souris traverse l'écran, avec une
    trajectoire qui passe devant la lune (haut-droite).
    ============================================================ */
 function launchBatGroup() {
@@ -4842,7 +5064,7 @@ function launchBatGroup() {
   if (!container) return;
 
   const isMobile = window.innerWidth < 720;
-  const count = isMobile ? 4 + Math.floor(Math.random() * 3) : 6 + Math.floor(Math.random() * 4);
+  const count = isMobile ? 6 + Math.floor(Math.random() * 5) : 9 + Math.floor(Math.random() * 7);
   const startFromLeft = Math.random() < 0.5;
 
   // Position de référence approximative de la lune
@@ -4903,13 +5125,17 @@ function launchBatGroup() {
 
 function setupBatFlights() {
   if (fx.prefersReduced) return;
-  // Premier passage après 8s
-  setTimeout(launchBatGroup, 8000);
-  // Puis aléatoirement toutes les 30 à 50 secondes
+  // Premiers passages rapides pour rendre le ciel plus vivant.
+  setTimeout(launchBatGroup, 2500);
+  setTimeout(launchBatGroup, 8500);
+  // Puis aléatoirement toutes les 9 à 18 secondes, parfois en double vague.
   function scheduleNext() {
-    const delay = 30000 + Math.random() * 20000;
+    const delay = 9000 + Math.random() * 9000;
     setTimeout(() => {
       launchBatGroup();
+      if (Math.random() < 0.35) {
+        setTimeout(launchBatGroup, 1200 + Math.random() * 1800);
+      }
       scheduleNext();
     }, delay);
   }
