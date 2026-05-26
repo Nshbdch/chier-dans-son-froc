@@ -1407,7 +1407,7 @@ h1.display-title .line-3 {
   padding: 0 22px;
   color: var(--ink-2);
   font-style: italic;
-  font-size: clamp(1rem, 0.92rem + 0.25vw, 1.16rem);
+  font-size: clamp(1.12rem, 1.02rem + 0.35vw, 1.34rem);
   line-height: 1.55;
 }
 .timeline-body ul {
@@ -1415,26 +1415,34 @@ h1.display-title .line-3 {
   margin: 0;
   padding: 0 22px 22px;
   display: grid;
-  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
 }
 .timeline-body li {
   display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 14px;
-  align-items: center;
-  padding: 12px 14px;
+  grid-template-columns: auto minmax(74px, max-content) minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  padding: 14px 16px;
   background: var(--parchment-2);
   border-radius: 10px;
   border-left: 4px solid var(--blood);
-  font-size: clamp(0.96rem, 0.9rem + 0.2vw, 1.1rem);
+  font-size: clamp(1.12rem, 1rem + 0.35vw, 1.3rem);
   color: var(--ink);
-  line-height: 1.45;
+  line-height: 1.35;
 }
-.timeline-body li strong { font-weight: 700; color: var(--blood-dark); }
+.timeline-body li strong {
+  display: block;
+  color: var(--blood-dark);
+  font-weight: 700;
+  line-height: 1.15;
+  text-align: left;
+  white-space: nowrap;
+}
 .bullet {
   display: inline-grid;
   place-items: center;
-  width: 30px; height: 30px;
+  width: 34px; height: 34px;
   background: var(--ghost);
   border-radius: 50%;
   border: 2px solid var(--night);
@@ -2411,14 +2419,21 @@ h1.display-title .line-3 {
   .day-badge { width: 50px; height: 50px; }
   .day-num { font-size: 1.4rem; }
   .day-tag { font-size: 0.54rem; }
-  .head-text strong { font-size: 0.98rem; }
-  .head-text small { font-size: 0.84rem; }
+  .head-text strong { font-size: 1.12rem; line-height: 1.2; }
+  .head-text small { font-size: 0.98rem; line-height: 1.25; }
   .chevron { width: 32px; height: 32px; }
   .chevron svg { width: 14px; height: 14px; }
-  .timeline-body p { padding: 0 16px; margin-bottom: 10px; font-size: 0.92rem; }
-  .timeline-body ul { padding: 0 16px 16px; gap: 6px; }
-  .timeline-body li { padding: 8px 10px; font-size: 0.85rem; border-left-width: 3px; }
-  .bullet { width: 26px; height: 26px; font-size: 0.82rem; }
+  .timeline-body p { padding: 0 16px; margin-bottom: 12px; font-size: 1.06rem; line-height: 1.45; }
+  .timeline-body ul { padding: 0 16px 16px; gap: 10px; }
+  .timeline-body li {
+    grid-template-columns: auto minmax(64px, max-content) minmax(0, 1fr);
+    gap: 10px;
+    padding: 12px 12px;
+    font-size: 1rem;
+    border-left-width: 4px;
+  }
+  .timeline-body li strong { line-height: 1.2; }
+  .bullet { width: 32px; height: 32px; font-size: 0.9rem; }
 
   /* Châteaux + villes 2 colonnes ou 1 selon contenu */
   .castle-grid { gap: 14px; }
@@ -2465,6 +2480,11 @@ h1.display-title .line-3 {
 
   .footer { padding-top: 30px; margin-top: 40px; }
   .footer-fraktur { font-size: 1.7rem; }
+}
+
+@media (max-width: 479px) {
+  .timeline-body ul { grid-template-columns: 1fr; }
+  .timeline-body li { font-size: 1.06rem; }
 }
 
 @media (min-width: 720px) {
