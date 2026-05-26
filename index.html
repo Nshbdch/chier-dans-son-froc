@@ -73,9 +73,9 @@ body {
   background: var(--night);
   min-height: 100vh;
   overflow-x: hidden;
-  line-height: 1.6;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
-  font-size: 1.05rem;
+  font-size: clamp(1.05rem, 0.95rem + 0.35vw, 1.22rem);
 }
 
 /* =================================================================
@@ -167,42 +167,256 @@ body {
   100% { transform: translateX(50%); }
 }
 
-/* Chauves-souris — discrètes et rares */
-.bats {
+/* =================================================================
+   ÉTOILES SCINTILLANTES
+   ================================================================= */
+.stars {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,0.9), transparent),
+    radial-gradient(1px 1px at 38% 9%, rgba(255,255,255,0.75), transparent),
+    radial-gradient(1px 1px at 67% 22%, rgba(255,255,255,0.85), transparent),
+    radial-gradient(1px 1px at 84% 11%, rgba(255,255,255,0.7), transparent),
+    radial-gradient(1.5px 1.5px at 22% 35%, rgba(255,255,255,0.8), transparent),
+    radial-gradient(1px 1px at 55% 41%, rgba(232,224,212,0.85), transparent),
+    radial-gradient(1px 1px at 77% 38%, rgba(255,255,255,0.7), transparent),
+    radial-gradient(1.5px 1.5px at 8% 55%, rgba(255,255,255,0.6), transparent),
+    radial-gradient(1px 1px at 44% 62%, rgba(255,255,255,0.55), transparent),
+    radial-gradient(1px 1px at 91% 50%, rgba(232,224,212,0.7), transparent),
+    radial-gradient(2px 2px at 30% 80%, rgba(255,255,255,0.7), transparent),
+    radial-gradient(1px 1px at 70% 88%, rgba(255,255,255,0.6), transparent);
+  animation: stars-twinkle 6s ease-in-out infinite;
+}
+@keyframes stars-twinkle {
+  0%, 100% { opacity: 0.85; }
+  50%      { opacity: 1; }
+}
+
+/* =================================================================
+   GROUPES DE CHAUVES-SOURIS DEVANT LA LUNE
+   Injectées par JS dans .bat-flights
+   ================================================================= */
+.bat-flights {
   position: fixed;
   inset: 0;
-  z-index: 2;
+  z-index: 1;
   pointer-events: none;
   overflow: hidden;
 }
-.bat {
+.bat-mini {
   position: absolute;
-  font-size: 0.7rem;
-  filter: brightness(0.15) blur(0.4px);
+  width: 14px;
+  height: 8px;
+  pointer-events: none;
+  /* Petites chauves-souris en SVG inline-bg */
+  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 14 8' xmlns='http://www.w3.org/2000/svg'><path d='M7 4 Q5 2 3 4 Q1 5 0 3 Q2 5 3 6 Q5 5 7 7 Q9 5 11 6 Q12 5 14 3 Q13 5 11 4 Q9 2 7 4 Z' fill='%230a0511'/></svg>");
+  background-repeat: no-repeat;
+  background-size: contain;
   opacity: 0;
+  filter: brightness(0.6);
 }
-/* Animations plus rares (1 passage toutes les 25-40s) et plus rapides (~4-6s par traversée) */
-.bat-1 { animation: bat-fly-1 32s linear infinite; }
-.bat-2 { animation: bat-fly-2 45s linear infinite; animation-delay: -22s; font-size: 0.55rem; }
-.bat-3 { animation: bat-fly-3 58s linear infinite; animation-delay: -40s; font-size: 0.65rem; }
-@keyframes bat-fly-1 {
-  /* Visible seulement sur ~15% du cycle (traversée rapide), invisible le reste du temps */
-  0%, 100% { opacity: 0; top: 12%; left: -5%; transform: rotate(4deg); }
-  4%       { opacity: 0.35; }
-  16%      { opacity: 0.4; top: 18%; left: 105%; transform: rotate(-2deg); }
-  18%, 100% { opacity: 0; left: 110%; }
+.bat-mini.flying {
+  animation: bat-flap 0.18s ease-in-out infinite;
 }
-@keyframes bat-fly-2 {
-  0%, 100% { opacity: 0; top: 55%; left: 110%; transform: rotate(-6deg) scaleX(-1); }
-  4%       { opacity: 0.3; }
-  18%      { opacity: 0.35; top: 60%; left: -5%; transform: rotate(-2deg) scaleX(-1); }
-  20%, 100% { opacity: 0; }
+@keyframes bat-flap {
+  0%, 100% { transform: scaleY(1); }
+  50%      { transform: scaleY(0.55); }
 }
-@keyframes bat-fly-3 {
-  0%, 100% { opacity: 0; top: 35%; left: -5%; transform: rotate(3deg); }
-  5%       { opacity: 0.32; }
-  14%      { opacity: 0.32; top: 28%; left: 105%; transform: rotate(-5deg); }
-  16%, 100% { opacity: 0; }
+
+/* =================================================================
+   JUMP SCARES
+   ================================================================= */
+.scare-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Chauve-souris géante qui traverse */
+.scare-bat-huge {
+  position: absolute;
+  top: 30%;
+  left: -200px;
+  font-size: 12rem;
+  filter: brightness(0.05) drop-shadow(0 0 20px rgba(0,0,0,0.6));
+  animation: scare-bat-huge-fly 0.7s cubic-bezier(.5, 0, .5, 1) forwards;
+  user-select: none;
+}
+@keyframes scare-bat-huge-fly {
+  0%   { left: -200px; transform: scale(0.6) rotate(-8deg); opacity: 0; }
+  20%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { left: 100vw; transform: scale(1.6) rotate(12deg); opacity: 0; }
+}
+
+/* Visage fantomatique */
+.scare-ghost {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.4);
+  width: min(360px, 70vw);
+  height: min(360px, 70vw);
+  opacity: 0;
+  animation: scare-ghost-pop 0.55s ease-out forwards;
+  filter: drop-shadow(0 0 40px rgba(196, 30, 58, 0.6));
+}
+@keyframes scare-ghost-pop {
+  0%   { transform: translate(-50%, -50%) scale(0.4); opacity: 0; }
+  10%  { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+  40%  { transform: translate(-50%, -50%) scale(1); opacity: 0.95; }
+  100% { transform: translate(-50%, -50%) scale(1.1); opacity: 0; }
+}
+
+/* Murmure / texte qui flotte */
+.scare-whisper {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 6vw, 4.5rem);
+  color: var(--blood);
+  text-shadow: 0 0 30px rgba(196, 30, 58, 0.8), 0 0 60px rgba(196, 30, 58, 0.5);
+  letter-spacing: 0.08em;
+  opacity: 0;
+  animation: scare-whisper-fade 2.6s ease-in-out forwards;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+@keyframes scare-whisper-fade {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.9); filter: blur(8px); }
+  20%  { opacity: 1; transform: translate(-50%, -50%) scale(1); filter: blur(0); }
+  80%  { opacity: 1; transform: translate(-50%, -50%) scale(1.05); filter: blur(0); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.1); filter: blur(10px); }
+}
+
+/* Œil rouge qui clignote */
+.scare-eye {
+  position: absolute;
+  width: 24px;
+  height: 16px;
+  background: var(--blood);
+  border-radius: 50%;
+  box-shadow:
+    0 0 16px var(--blood),
+    0 0 40px rgba(196, 30, 58, 0.7),
+    40px 0 0 var(--blood),
+    40px 0 16px var(--blood),
+    40px 0 40px rgba(196, 30, 58, 0.7);
+  opacity: 0;
+  animation: scare-eye-blink 1.8s ease-in-out forwards;
+}
+@keyframes scare-eye-blink {
+  0%, 100% { opacity: 0; transform: scaleY(0.1); }
+  15%      { opacity: 0.95; transform: scaleY(1); }
+  45%      { opacity: 0.95; transform: scaleY(1); }
+  50%      { opacity: 0.95; transform: scaleY(0.1); }
+  55%      { opacity: 0.95; transform: scaleY(1); }
+  80%      { opacity: 0.95; transform: scaleY(1); }
+}
+
+/* Tremblement de la page */
+.page-shake {
+  animation: page-shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+}
+@keyframes page-shake {
+  10%, 90% { transform: translate3d(-2px, 0, 0); }
+  20%, 80% { transform: translate3d(4px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+  40%, 60% { transform: translate3d(6px, 0, 0); }
+}
+
+/* Goutte de sang qui tombe */
+.scare-blood-drop {
+  position: absolute;
+  top: -20px;
+  width: 8px;
+  height: 12px;
+  background: var(--blood);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  box-shadow: 0 0 8px rgba(196, 30, 58, 0.6);
+  animation: blood-drop 2.5s cubic-bezier(.5, 0, .9, .5) forwards;
+}
+@keyframes blood-drop {
+  0%   { top: -20px; transform: scaleY(1); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { transform: scaleY(1.4) translateY(0); opacity: 1; }
+  100% { transform: scaleY(0.4) translateY(20px); opacity: 0; top: calc(100vh - 20px); }
+}
+
+/* =================================================================
+   FLASH D'ÉCLAIR
+   ================================================================= */
+.lightning {
+  position: fixed;
+  inset: 0;
+  z-index: 8500;
+  pointer-events: none;
+  background: rgba(232, 224, 212, 0);
+  mix-blend-mode: screen;
+}
+.lightning.flashing {
+  animation: lightning-flash 0.55s ease-out forwards;
+}
+@keyframes lightning-flash {
+  0%   { background: rgba(232, 224, 212, 0); }
+  5%   { background: rgba(255, 255, 255, 0.85); }
+  10%  { background: rgba(232, 224, 212, 0.2); }
+  15%  { background: rgba(255, 255, 255, 0.9); }
+  20%  { background: rgba(232, 224, 212, 0.1); }
+  100% { background: rgba(232, 224, 212, 0); }
+}
+
+/* =================================================================
+   TRAIL DU CURSEUR (desktop)
+   ================================================================= */
+.cursor-trail {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  display: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .cursor-trail { display: block; }
+}
+
+/* =================================================================
+   BOUTON SOUND TOGGLE
+   ================================================================= */
+.sound-toggle {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 70;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 2px solid rgba(196, 30, 58, 0.4);
+  border-radius: 50%;
+  background: rgba(10, 5, 17, 0.85);
+  backdrop-filter: blur(8px);
+  color: var(--ghost);
+  cursor: pointer;
+  font-size: 1.1rem;
+  display: grid;
+  place-items: center;
+  transition: transform 200ms, background 200ms, border-color 200ms;
+}
+.sound-toggle:hover {
+  background: rgba(196, 30, 58, 0.3);
+  border-color: var(--blood);
+  transform: scale(1.08);
+}
+.sound-toggle .sound-icon-off { display: none; }
+.sound-toggle[data-muted="true"] .sound-icon-on { display: none; }
+.sound-toggle[data-muted="true"] .sound-icon-off { display: inline; }
+@media (max-width: 719px) {
+  .sound-toggle { top: 12px; right: 12px; width: 38px; height: 38px; font-size: 0.95rem; }
 }
 
 /* =================================================================
@@ -228,7 +442,7 @@ button, select, input { font: inherit; color: inherit; }
   font-family: var(--font-display);
   font-weight: 400;
   letter-spacing: 0.015em;
-  font-size: clamp(2.2rem, 7.5vw, 4rem);
+  font-size: clamp(2.2rem, 6vw, 4.8rem);
   line-height: 1;
   color: var(--ghost);
   margin: 0 0 14px;
@@ -240,7 +454,7 @@ button, select, input { font: inherit; color: inherit; }
   margin: 0 0 14px;
   font-family: var(--font-mono);
   color: var(--blood);
-  font-size: 0.7rem;
+  font-size: clamp(0.74rem, 0.7rem + 0.15vw, 0.86rem);
   font-weight: 500;
   letter-spacing: 0.24em;
   text-transform: uppercase;
@@ -264,10 +478,10 @@ button, select, input { font: inherit; color: inherit; }
 .section-title .eyebrow { justify-content: center; }
 .section-sub {
   color: var(--ghost-pale);
-  font-size: 1.1rem;
+  font-size: clamp(1.05rem, 0.95rem + 0.35vw, 1.3rem);
   font-style: italic;
   margin: 8px auto 0;
-  max-width: 600px;
+  max-width: 660px;
 }
 
 /* =================================================================
@@ -718,15 +932,16 @@ h1.display-title .line-3 {
 .ribbon-stats .big {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(2rem, 6vw, 2.8rem);
+  font-size: clamp(2rem, 1.5rem + 1.8vw, 3.4rem);
   line-height: 1;
   color: var(--blood-dark);
   letter-spacing: 0.01em;
 }
 .ribbon-stats .lbl {
-  font-size: 0.86rem;
+  font-size: clamp(0.86rem, 0.8rem + 0.2vw, 1rem);
   color: var(--ink-2);
   font-weight: 600;
+  line-height: 1.3;
 }
 
 /* =================================================================
@@ -1155,7 +1370,7 @@ h1.display-title .line-3 {
 }
 .head-text strong {
   display: block;
-  font-size: 1.06rem;
+  font-size: clamp(1.06rem, 0.98rem + 0.35vw, 1.35rem);
   font-weight: 700;
   color: var(--ink);
   margin-bottom: 2px;
@@ -1165,7 +1380,7 @@ h1.display-title .line-3 {
   color: var(--ink-2);
   font-weight: 500;
   font-style: italic;
-  font-size: 0.92rem;
+  font-size: clamp(0.92rem, 0.85rem + 0.25vw, 1.12rem);
 }
 .chevron {
   display: grid; place-items: center;
@@ -1192,6 +1407,8 @@ h1.display-title .line-3 {
   padding: 0 22px;
   color: var(--ink-2);
   font-style: italic;
+  font-size: clamp(1rem, 0.92rem + 0.25vw, 1.16rem);
+  line-height: 1.55;
 }
 .timeline-body ul {
   list-style: none;
@@ -1203,14 +1420,15 @@ h1.display-title .line-3 {
 .timeline-body li {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 12px;
+  gap: 14px;
   align-items: center;
-  padding: 10px 12px;
+  padding: 12px 14px;
   background: var(--parchment-2);
   border-radius: 10px;
   border-left: 4px solid var(--blood);
-  font-size: 0.94rem;
+  font-size: clamp(0.96rem, 0.9rem + 0.2vw, 1.1rem);
   color: var(--ink);
+  line-height: 1.45;
 }
 .timeline-body li strong { font-weight: 700; color: var(--blood-dark); }
 .bullet {
@@ -1274,15 +1492,15 @@ h1.display-title .line-3 {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: 1.8rem;
+  font-size: clamp(1.7rem, 1.5rem + 0.7vw, 2.4rem);
   letter-spacing: 0.01em;
   color: var(--blood-dark);
-  line-height: 1;
+  line-height: 1.05;
 }
 .castle-loc {
   margin: 0;
   font-family: var(--font-mono);
-  font-size: 0.74rem;
+  font-size: clamp(0.78rem, 0.74rem + 0.15vw, 0.9rem);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--muted);
@@ -1290,6 +1508,8 @@ h1.display-title .line-3 {
 .castle-card > p:not(.castle-loc) {
   margin: 4px 0 8px;
   color: var(--ink-2);
+  font-size: clamp(1rem, 0.94rem + 0.2vw, 1.14rem);
+  line-height: 1.5;
 }
 .castle-card em { color: var(--blood-dark); font-style: italic; font-weight: 700; }
 .castle-tags {
@@ -1356,12 +1576,17 @@ h1.display-title .line-3 {
   margin: 8px 0 4px;
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: 1.55rem;
+  font-size: clamp(1.5rem, 1.35rem + 0.55vw, 2rem);
   letter-spacing: 0.01em;
   color: var(--blood-dark);
-  line-height: 1;
+  line-height: 1.05;
 }
-.city-card p { margin: 0; color: var(--ink-2); font-size: 0.96rem; }
+.city-card p {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: clamp(0.96rem, 0.9rem + 0.2vw, 1.1rem);
+  line-height: 1.5;
+}
 .city-card strong { color: var(--blood-dark); font-weight: 700; }
 .city-time {
   display: inline-flex;
@@ -1440,7 +1665,7 @@ h1.display-title .line-3 {
   color: var(--ghost);
   margin-bottom: 14px;
 }
-.illus-copy p { color: var(--ghost-pale); font-size: 1.04rem; line-height: 1.65; margin: 0 0 12px; }
+.illus-copy p { color: var(--ghost-pale); font-size: clamp(1.04rem, 0.96rem + 0.25vw, 1.22rem); line-height: 1.65; margin: 0 0 12px; }
 .illus-copy strong { color: var(--blood); font-weight: 700; }
 .illus-copy .kicker {
   margin-top: 18px;
@@ -1507,7 +1732,7 @@ h1.display-title .line-3 {
   margin: 0 0 6px;
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: 1.5rem;
+  font-size: clamp(1.45rem, 1.3rem + 0.55vw, 1.95rem);
   letter-spacing: 0.01em;
   color: var(--blood-dark);
   line-height: 1.1;
@@ -1516,7 +1741,7 @@ h1.display-title .line-3 {
   display: block;
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: 2rem;
+  font-size: clamp(1.85rem, 1.6rem + 0.85vw, 2.6rem);
   color: var(--blood);
   margin: 2px 0 8px;
   letter-spacing: 0.01em;
@@ -1525,7 +1750,8 @@ h1.display-title .line-3 {
 .budget-card p, .tip p {
   margin: 0;
   color: var(--ink-2);
-  font-size: 0.94rem;
+  font-size: clamp(0.96rem, 0.9rem + 0.2vw, 1.1rem);
+  line-height: 1.5;
 }
 .tip strong { color: var(--blood-dark); font-weight: 700; }
 
@@ -1566,15 +1792,16 @@ h1.display-title .line-3 {
 .phrase-de {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: 1.7rem;
+  font-size: clamp(1.6rem, 1.4rem + 0.7vw, 2.2rem);
   color: var(--blood-dark);
   letter-spacing: 0.01em;
   line-height: 1.1;
 }
 .phrase-fr {
   color: var(--ink-2);
-  font-size: 0.92rem;
+  font-size: clamp(0.94rem, 0.88rem + 0.2vw, 1.08rem);
   font-style: italic;
+  line-height: 1.4;
 }
 
 /* =================================================================
@@ -2304,6 +2531,102 @@ h1.display-title .line-3 {
   .phrasebook { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
+/* =================================================================
+   EFFETS AU SCROLL & HOVER PREMIUM
+   ================================================================= */
+/* Tilt 3D des cards au survol — uniquement desktop avec souris */
+@media (hover: hover) and (pointer: fine) {
+  .castle-card, .city-card, .budget-card, .tip, .timeline-item, .accommodation-card, .intro-card {
+    transform-style: preserve-3d;
+    transition: transform 280ms cubic-bezier(.2, .8, .2, 1), box-shadow 280ms;
+  }
+  .castle-card.tilting, .city-card.tilting, .budget-card.tilting, .tip.tilting, .accommodation-card.tilting, .intro-card.tilting {
+    transform: perspective(800px)
+               rotateX(var(--tilt-x, 0deg))
+               rotateY(var(--tilt-y, 0deg))
+               translate3d(0, -2px, 0);
+  }
+}
+
+/* Halo rouge sang autour des cards visibles */
+.reveal.visible.aura {
+  animation: aura-pulse 4s ease-in-out infinite;
+}
+@keyframes aura-pulse {
+  0%, 100% { box-shadow: 4px 4px 0 var(--blood-deep), 0 0 0 rgba(196, 30, 58, 0); }
+  50%      { box-shadow: 4px 4px 0 var(--blood-deep), 0 0 24px rgba(196, 30, 58, 0.25); }
+}
+
+/* Lettres qui dégoulinent au hover sur les fraktur-h (desktop) */
+@media (hover: hover) and (pointer: fine) {
+  .fraktur-h {
+    transition: text-shadow 400ms;
+  }
+  .fraktur-h:hover {
+    text-shadow:
+      0 0 20px rgba(196, 30, 58, 0.5),
+      0 2px 0 var(--blood),
+      0 4px 0 var(--blood),
+      0 6px 6px rgba(196, 30, 58, 0.6),
+      0 12px 14px rgba(196, 30, 58, 0.3);
+  }
+}
+
+/* Texte qui scintille au scroll-into-view */
+.reveal.visible .fraktur-h {
+  animation: title-emerge 1.2s ease-out;
+}
+@keyframes title-emerge {
+  0%   { filter: blur(8px); opacity: 0; }
+  50%  { filter: blur(0); opacity: 1; }
+  60%  { filter: blur(2px); }
+  100% { filter: blur(0); }
+}
+
+/* Effet parallax appliqué via JS sur la lune et le château */
+.gothic-bg .moon,
+.gothic-bg .castle-silhouette {
+  will-change: transform;
+}
+
+/* Animations subtiles continues sur les boutons */
+.btn.primary {
+  position: relative;
+  overflow: hidden;
+}
+.btn.primary::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.25),
+    transparent
+  );
+  animation: btn-shine 4s ease-in-out infinite;
+}
+@keyframes btn-shine {
+  0%, 80%, 100% { left: -50%; }
+  90%           { left: 150%; }
+}
+
+/* Scroll progress bar gothique en haut */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: var(--progress, 0%);
+  background: linear-gradient(90deg, var(--blood-dark), var(--blood), var(--gold));
+  z-index: 100;
+  box-shadow: 0 0 10px rgba(196, 30, 58, 0.6);
+  transition: width 100ms ease-out;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -2316,8 +2639,12 @@ h1.display-title .line-3 {
 </head>
 <body>
 
+  <!-- Barre de progression scroll -->
+  <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
+
   <!-- ====== DÉCOR PERSISTANT ====== -->
   <div class="gothic-bg" aria-hidden="true">
+    <div class="stars"></div>
     <div class="moon"></div>
     <div class="castle-silhouette">
       <svg viewBox="0 0 1200 200" preserveAspectRatio="none">
@@ -2333,12 +2660,23 @@ h1.display-title .line-3 {
     <div class="fog-layer fog-3"></div>
   </div>
 
-  <!-- Chauves-souris qui traversent -->
-  <div class="bats" aria-hidden="true">
-    <span class="bat bat-1">🦇</span>
-    <span class="bat bat-2">🦇</span>
-    <span class="bat bat-3">🦇</span>
-  </div>
+  <!-- Layer pour groupes de chauves-souris passant devant la lune -->
+  <div class="bat-flights" id="bat-flights" aria-hidden="true"></div>
+
+  <!-- Layer pour jump scares et effets dramatiques -->
+  <div class="scare-layer" id="scare-layer" aria-hidden="true"></div>
+
+  <!-- Flash d'éclair plein écran -->
+  <div class="lightning" id="lightning" aria-hidden="true"></div>
+
+  <!-- Trail curseur (desktop) -->
+  <canvas class="cursor-trail" id="cursor-trail" aria-hidden="true"></canvas>
+
+  <!-- Bouton mute son -->
+  <button class="sound-toggle" type="button" id="sound-toggle" aria-label="Activer / couper les sons">
+    <span class="sound-icon-on">🔊</span>
+    <span class="sound-icon-off">🔇</span>
+  </button>
 
   <!-- ====== QUENTIBUS 2K · VAMPIRE (bas-gauche) ====== -->
   <button class="vampire-guy" type="button" id="vampire-guy" aria-label="Donner du sang à Quentibus 2K">
@@ -3895,9 +4233,738 @@ function setupKeyboardEgg() {
 }
 
 /* ============================================================
-   INIT
+   🎼 MUSIQUE D'AMBIANCE DRACULA
+   Drone d'orgue + mélodie lente en ré mineur, en boucle.
+   Inspiré de la Toccata BWV 565 (sans la copier).
    ============================================================ */
+const ambient = {
+  isPlaying: false,
+  masterGain: null,
+  droneNodes: [],
+  melodyTimer: null,
+  reverbBus: null,
+  dryBus: null,
+  startTime: 0,
+  melodyIndex: 0
+};
+
+/* Notes en Hz (D mineur naturel) */
+const NOTE_HZ = {
+  D2: 73.42, F2: 87.31, A2: 110.00, D3: 146.83,
+  F3: 174.61, G3: 196.00, A3: 220.00, Bb3: 233.08,
+  C4: 261.63, D4: 293.66, E4: 329.63, F4: 349.23,
+  G4: 392.00, A4: 440.00, Bb4: 466.16, C5: 523.25, D5: 587.33
+};
+
+/* Mélodie : suite de tuples [note, durée en secondes]. Pause = null. */
+const MELODY = [
+  ["A4", 1.2], ["G4", 0.6], ["F4", 0.6], ["E4", 0.8], ["D4", 1.6],
+  [null, 0.6],
+  ["D4", 0.8], ["F4", 0.6], ["A4", 0.6], ["Bb4", 0.8], ["A4", 1.4],
+  [null, 0.8],
+  ["D5", 1], ["C5", 0.6], ["Bb4", 0.6], ["A4", 0.8], ["F4", 0.6], ["E4", 0.6], ["D4", 1.8],
+  [null, 1.2],
+  ["A3", 1], ["D4", 0.6], ["F4", 0.6], ["A4", 0.8], ["D5", 1.6],
+  [null, 1.5]
+];
+
+function setupAmbientBus(ctx) {
+  // Master gain
+  ambient.masterGain = ctx.createGain();
+  ambient.masterGain.gain.value = 0;
+  ambient.masterGain.connect(ctx.destination);
+
+  // Bus de réverb simulé via delay + lowpass + feedback
+  const delay = ctx.createDelay(2);
+  delay.delayTime.value = 0.32;
+  const feedback = ctx.createGain();
+  feedback.gain.value = 0.45;
+  const wetFilter = ctx.createBiquadFilter();
+  wetFilter.type = "lowpass";
+  wetFilter.frequency.value = 1800;
+  const wetGain = ctx.createGain();
+  wetGain.gain.value = 0.35;
+
+  delay.connect(feedback).connect(delay);
+  delay.connect(wetFilter).connect(wetGain).connect(ambient.masterGain);
+
+  ambient.reverbBus = delay;
+  ambient.dryBus = ambient.masterGain;
+}
+
+/* Démarre le drone d'orgue (3 oscillateurs sine + 1 triangle sub) */
+function startDrone(ctx) {
+  // Accord fondamental : D2 + A2 + D3 + F3 (mineur ouvert)
+  const droneFreqs = [
+    NOTE_HZ.D2,
+    NOTE_HZ.A2,
+    NOTE_HZ.D3,
+    NOTE_HZ.F3
+  ];
+
+  droneFreqs.forEach((freq, i) => {
+    const osc = ctx.createOscillator();
+    const oscDetune = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
+
+    osc.type = "sine";
+    osc.frequency.value = freq;
+    oscDetune.type = "sine";
+    oscDetune.frequency.value = freq;
+    oscDetune.detune.value = 8; // léger detune pour chorus
+
+    filter.type = "lowpass";
+    filter.frequency.value = 800 + i * 200;
+    filter.Q.value = 1;
+
+    // LFO sur le filtre : "respiration" lente
+    const lfo = ctx.createOscillator();
+    const lfoGain = ctx.createGain();
+    lfo.frequency.value = 0.08 + i * 0.03;
+    lfoGain.gain.value = 80;
+    lfo.connect(lfoGain).connect(filter.frequency);
+    lfo.start();
+
+    // Volume par voix
+    gain.gain.value = 0.08 / (1 + i * 0.2);
+
+    osc.connect(filter);
+    oscDetune.connect(filter);
+    filter.connect(gain);
+    gain.connect(ambient.dryBus);
+    gain.connect(ambient.reverbBus);
+
+    osc.start();
+    oscDetune.start();
+
+    ambient.droneNodes.push({ osc, oscDetune, lfo, gain, filter });
+  });
+}
+
+/* Joue une note de la mélodie (orgue type church) */
+function playMelodyNote(ctx, freq, duration) {
+  const now = ctx.currentTime;
+  // 3 partiels harmoniques pour le timbre d'orgue : fondamental + octave + douzième
+  const partials = [
+    { ratio: 1,    gain: 0.10, type: "sine" },
+    { ratio: 2,    gain: 0.05, type: "sine" },
+    { ratio: 3,    gain: 0.025, type: "sine" }
+  ];
+  const noteGain = ctx.createGain();
+  noteGain.gain.value = 0;
+  // ADSR
+  noteGain.gain.setValueAtTime(0, now);
+  noteGain.gain.linearRampToValueAtTime(1, now + 0.08); // attack
+  noteGain.gain.setValueAtTime(1, now + duration - 0.15);
+  noteGain.gain.linearRampToValueAtTime(0, now + duration); // release
+
+  const filter = ctx.createBiquadFilter();
+  filter.type = "lowpass";
+  filter.frequency.value = 2200;
+
+  partials.forEach(p => {
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.type = p.type;
+    osc.frequency.value = freq * p.ratio;
+    g.gain.value = p.gain;
+    osc.connect(g).connect(filter);
+    osc.start(now);
+    osc.stop(now + duration + 0.1);
+  });
+
+  filter.connect(noteGain);
+  noteGain.connect(ambient.dryBus);
+  noteGain.connect(ambient.reverbBus);
+}
+
+/* Boucle de mélodie */
+function scheduleMelody(ctx) {
+  function nextNote() {
+    if (!ambient.isPlaying) return;
+    const step = MELODY[ambient.melodyIndex];
+    ambient.melodyIndex = (ambient.melodyIndex + 1) % MELODY.length;
+    const [note, dur] = step;
+    if (note) {
+      const freq = NOTE_HZ[note];
+      if (freq) playMelodyNote(ctx, freq, dur);
+    }
+    ambient.melodyTimer = setTimeout(nextNote, dur * 1000);
+  }
+  nextNote();
+}
+
+function startAmbient() {
+  if (ambient.isPlaying) return;
+  const ctx = getAudio();
+  if (!ctx) return;
+  if (ctx.state === "suspended") ctx.resume();
+  ambient.isPlaying = true;
+  setupAmbientBus(ctx);
+  startDrone(ctx);
+  scheduleMelody(ctx);
+  // Fade-in du master
+  const now = ctx.currentTime;
+  ambient.masterGain.gain.setValueAtTime(0, now);
+  ambient.masterGain.gain.linearRampToValueAtTime(0.5, now + 4);
+}
+
+function stopAmbient() {
+  if (!ambient.isPlaying) return;
+  const ctx = getAudio();
+  if (!ctx) return;
+  ambient.isPlaying = false;
+  if (ambient.melodyTimer) clearTimeout(ambient.melodyTimer);
+  ambient.melodyIndex = 0;
+
+  // Fade-out puis cleanup
+  const now = ctx.currentTime;
+  if (ambient.masterGain) {
+    ambient.masterGain.gain.cancelScheduledValues(now);
+    ambient.masterGain.gain.setValueAtTime(ambient.masterGain.gain.value, now);
+    ambient.masterGain.gain.linearRampToValueAtTime(0, now + 1.2);
+  }
+  setTimeout(() => {
+    ambient.droneNodes.forEach(node => {
+      try {
+        node.osc.stop();
+        node.oscDetune.stop();
+        node.lfo.stop();
+      } catch (e) {}
+    });
+    ambient.droneNodes = [];
+    if (ambient.masterGain) { ambient.masterGain.disconnect(); ambient.masterGain = null; }
+  }, 1300);
+}
+
+
+
+/* État global : sons activés ou non */
+const fx = {
+  soundEnabled: true,
+  prefersReduced: false
+};
+
+/* ----- TOGGLE SON ----- */
+function setupSoundToggle() {
+  const btn = document.querySelector("#sound-toggle");
+  if (!btn) return;
+  // Lecture du localStorage pour respecter le choix utilisateur
+  try {
+    const stored = localStorage.getItem("trans-sound");
+    if (stored === "off") fx.soundEnabled = false;
+  } catch (e) {}
+  btn.setAttribute("data-muted", String(!fx.soundEnabled));
+  btn.addEventListener("click", () => {
+    fx.soundEnabled = !fx.soundEnabled;
+    btn.setAttribute("data-muted", String(!fx.soundEnabled));
+    try { localStorage.setItem("trans-sound", fx.soundEnabled ? "on" : "off"); } catch (e) {}
+    if (fx.soundEnabled) {
+      toast("🎼 Son activé · musique d'ambiance");
+      startAmbient();
+    } else {
+      toast("🔇 Silence sépulcral");
+      stopAmbient();
+    }
+  });
+}
+
+/* Wrapper qui respecte fx.soundEnabled */
+function safePlay(fn) {
+  if (!fx.soundEnabled) return;
+  try { fn(); } catch (e) {}
+}
+
+/* ----- SONS ADDITIONNELS ----- */
+function playThunder() {
+  const ctx = getAudio(); if (!ctx) return;
+  if (ctx.state === "suspended") ctx.resume();
+  const now = ctx.currentTime;
+  // Bruit blanc filtré + impact
+  const buffer = ctx.createBuffer(1, ctx.sampleRate * 1.8, ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < data.length; i++) {
+    data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.55));
+  }
+  const source = ctx.createBufferSource();
+  const filter = ctx.createBiquadFilter();
+  const gain = ctx.createGain();
+  source.buffer = buffer;
+  filter.type = "lowpass";
+  filter.frequency.value = 220;
+  gain.gain.setValueAtTime(0.5, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 1.6);
+  source.connect(filter).connect(gain).connect(ctx.destination);
+  source.start(now);
+}
+
+function playScream() {
+  const ctx = getAudio(); if (!ctx) return;
+  if (ctx.state === "suspended") ctx.resume();
+  const now = ctx.currentTime;
+  // Cri synthétique avec modulation
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = "sawtooth";
+  osc.frequency.setValueAtTime(800, now);
+  osc.frequency.exponentialRampToValueAtTime(400, now + 0.3);
+  osc.frequency.exponentialRampToValueAtTime(120, now + 0.6);
+  gain.gain.setValueAtTime(0, now);
+  gain.gain.linearRampToValueAtTime(0.18, now + 0.02);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.7);
+  // Tremblement
+  const lfo = ctx.createOscillator();
+  const lfoGain = ctx.createGain();
+  lfo.frequency.value = 18;
+  lfoGain.gain.value = 40;
+  lfo.connect(lfoGain).connect(osc.frequency);
+  osc.connect(gain).connect(ctx.destination);
+  osc.start(now);
+  lfo.start(now);
+  osc.stop(now + 0.7);
+  lfo.stop(now + 0.7);
+}
+
+function playWhisper() {
+  const ctx = getAudio(); if (!ctx) return;
+  if (ctx.state === "suspended") ctx.resume();
+  const now = ctx.currentTime;
+  // Souffle continu avec un peu de pitch
+  const buffer = ctx.createBuffer(1, ctx.sampleRate * 1.5, ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < data.length; i++) {
+    data[i] = (Math.random() * 2 - 1) * 0.5;
+  }
+  const source = ctx.createBufferSource();
+  const filter = ctx.createBiquadFilter();
+  const gain = ctx.createGain();
+  source.buffer = buffer;
+  filter.type = "bandpass";
+  filter.frequency.value = 800;
+  filter.Q.value = 4;
+  gain.gain.setValueAtTime(0, now);
+  gain.gain.linearRampToValueAtTime(0.08, now + 0.2);
+  gain.gain.linearRampToValueAtTime(0.08, now + 1);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
+  source.connect(filter).connect(gain).connect(ctx.destination);
+  source.start(now);
+}
+
+function playHeartbeat() {
+  const ctx = getAudio(); if (!ctx) return;
+  if (ctx.state === "suspended") ctx.resume();
+  const now = ctx.currentTime;
+  // Deux thumps : "boum-boum"
+  [0, 0.18].forEach((delay, i) => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(80, now + delay);
+    osc.frequency.exponentialRampToValueAtTime(35, now + delay + 0.15);
+    gain.gain.setValueAtTime(0, now + delay);
+    gain.gain.linearRampToValueAtTime(i === 0 ? 0.25 : 0.18, now + delay + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + delay + 0.2);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start(now + delay);
+    osc.stop(now + delay + 0.25);
+  });
+}
+
+/* ----- ENVELOPPER LES SONS EXISTANTS DANS safePlay -----
+   On surcharge les fonctions globales pour que tous les appels
+   existants (vampireDrink, bearEat, etc.) respectent le toggle son. */
+const _origPlaySip = playSip;
+const _origPlayMunch = playMunch;
+const _origPlayHowl = playHowl;
+playSip  = function() { safePlay(_origPlaySip); };
+playMunch = function() { safePlay(_origPlayMunch); };
+playHowl = function() { safePlay(_origPlayHowl); };
+
+/* ============================================================
+   GROUPES DE CHAUVES-SOURIS DEVANT LA LUNE
+   Un essaim de 5-9 chauves-souris traverse l'écran, avec une
+   trajectoire qui passe devant la lune (haut-droite).
+   ============================================================ */
+function launchBatGroup() {
+  if (fx.prefersReduced) return;
+  const container = document.querySelector("#bat-flights");
+  if (!container) return;
+
+  const isMobile = window.innerWidth < 720;
+  const count = isMobile ? 4 + Math.floor(Math.random() * 3) : 6 + Math.floor(Math.random() * 4);
+  const startFromLeft = Math.random() < 0.5;
+
+  // Position de référence approximative de la lune
+  // Sur desktop : top 5% right 8% (donc x ≈ width * 0.92, y ≈ height * 0.12)
+  // Sur mobile  : top 3% right 5%
+  const moonX = window.innerWidth * (isMobile ? 0.95 : 0.92);
+  const moonY = window.innerHeight * (isMobile ? 0.08 : 0.12);
+
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => {
+      const bat = document.createElement("span");
+      bat.className = "bat-mini flying";
+
+      const size = isMobile ? 10 + Math.random() * 6 : 14 + Math.random() * 8;
+      bat.style.width = `${size}px`;
+      bat.style.height = `${size * 0.6}px`;
+
+      // Position de départ et d'arrivée
+      const startX = startFromLeft ? -30 : window.innerWidth + 30;
+      const endX   = startFromLeft ? window.innerWidth + 30 : -30;
+      // Y autour de la lune (passage en arc)
+      const startY = moonY + (Math.random() - 0.5) * 80;
+      const endY   = moonY + (Math.random() - 0.5) * 80;
+      // Point de passage devant la lune
+      const peakY  = moonY + (Math.random() - 0.4) * 60;
+
+      bat.style.left = `${startX}px`;
+      bat.style.top  = `${startY}px`;
+      bat.style.opacity = "0.6";
+      container.appendChild(bat);
+
+      const duration = 2500 + Math.random() * 1500;
+      const startTime = performance.now();
+
+      function animate(now) {
+        const elapsed = now - startTime;
+        const t = Math.min(1, elapsed / duration);
+        // Trajectoire courbe : bezier quadratique
+        const x = (1 - t) * (1 - t) * startX + 2 * (1 - t) * t * moonX + t * t * endX;
+        const y = (1 - t) * (1 - t) * startY + 2 * (1 - t) * t * peakY + t * t * endY;
+        bat.style.left = `${x}px`;
+        bat.style.top  = `${y}px`;
+        // Fade in / fade out
+        if (t < 0.15) bat.style.opacity = String(t / 0.15 * 0.7);
+        else if (t > 0.85) bat.style.opacity = String((1 - t) / 0.15 * 0.7);
+        else bat.style.opacity = "0.7";
+
+        if (t < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          bat.remove();
+        }
+      }
+      requestAnimationFrame(animate);
+    }, i * (150 + Math.random() * 200));
+  }
+}
+
+function setupBatFlights() {
+  if (fx.prefersReduced) return;
+  // Premier passage après 8s
+  setTimeout(launchBatGroup, 8000);
+  // Puis aléatoirement toutes les 30 à 50 secondes
+  function scheduleNext() {
+    const delay = 30000 + Math.random() * 20000;
+    setTimeout(() => {
+      launchBatGroup();
+      scheduleNext();
+    }, delay);
+  }
+  scheduleNext();
+}
+
+/* ============================================================
+   JUMP SCARES
+   ============================================================ */
+function triggerLightning() {
+  if (fx.prefersReduced) return;
+  const flash = document.querySelector("#lightning");
+  if (!flash) return;
+  flash.classList.remove("flashing");
+  void flash.offsetWidth; // reflow
+  flash.classList.add("flashing");
+  safePlay(playThunder);
+  setTimeout(() => flash.classList.remove("flashing"), 600);
+}
+
+function triggerHugeBat() {
+  if (fx.prefersReduced) return;
+  const layer = document.querySelector("#scare-layer");
+  if (!layer) return;
+  const bat = document.createElement("span");
+  bat.className = "scare-bat-huge";
+  bat.textContent = "🦇";
+  // Position verticale aléatoire
+  bat.style.top = `${20 + Math.random() * 40}%`;
+  layer.appendChild(bat);
+  safePlay(playScream);
+  setTimeout(() => bat.remove(), 1000);
+}
+
+function triggerGhostFace() {
+  if (fx.prefersReduced) return;
+  const layer = document.querySelector("#scare-layer");
+  if (!layer) return;
+  const ghost = document.createElement("div");
+  ghost.className = "scare-ghost";
+  ghost.innerHTML = `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="100" cy="105" rx="75" ry="90" fill="#e8e0d4" opacity="0.85"/>
+    <ellipse cx="75" cy="85" rx="12" ry="18" fill="#0a0511"/>
+    <ellipse cx="125" cy="85" rx="12" ry="18" fill="#0a0511"/>
+    <circle cx="75" cy="85" r="4" fill="#c41e3a"/>
+    <circle cx="125" cy="85" r="4" fill="#c41e3a"/>
+    <path d="M70 140 Q85 165 100 158 Q115 165 130 140 Q125 155 115 160 Q100 168 85 160 Q75 155 70 140 Z" fill="#0a0511"/>
+    <path d="M82 144 L82 156 M88 142 L88 158 M94 142 L94 158 M100 142 L100 158 M106 142 L106 158 M112 142 L112 158 M118 144 L118 156" stroke="#e8e0d4" stroke-width="1"/>
+  </svg>`;
+  layer.appendChild(ghost);
+  safePlay(playScream);
+  shakePage();
+  setTimeout(() => ghost.remove(), 600);
+}
+
+function triggerWhisper() {
+  if (fx.prefersReduced) return;
+  const layer = document.querySelector("#scare-layer");
+  if (!layer) return;
+  const whispers = [
+    "Bun venit…",
+    "Ne uite niciodată…",
+    "Dracula te vede",
+    "Sub pat…",
+    "Întoarce-te…",
+    "Pofta buna 🩸"
+  ];
+  const whisper = document.createElement("div");
+  whisper.className = "scare-whisper";
+  whisper.textContent = whispers[Math.floor(Math.random() * whispers.length)];
+  // Position légèrement aléatoire
+  whisper.style.top = `${30 + Math.random() * 30}%`;
+  whisper.style.left = `${50 + (Math.random() - 0.5) * 20}%`;
+  layer.appendChild(whisper);
+  safePlay(playWhisper);
+  setTimeout(() => whisper.remove(), 2700);
+}
+
+function triggerEye() {
+  if (fx.prefersReduced) return;
+  const layer = document.querySelector("#scare-layer");
+  if (!layer) return;
+  const eye = document.createElement("div");
+  eye.className = "scare-eye";
+  // Position aléatoire sur les bords
+  const corner = Math.floor(Math.random() * 4);
+  const positions = [
+    { top: `${10 + Math.random() * 15}%`, left: `${5 + Math.random() * 10}%` },
+    { top: `${10 + Math.random() * 15}%`, right: `${5 + Math.random() * 10}%` },
+    { bottom: `${30 + Math.random() * 20}%`, left: `${5 + Math.random() * 10}%` },
+    { bottom: `${30 + Math.random() * 20}%`, right: `${5 + Math.random() * 10}%` }
+  ];
+  Object.assign(eye.style, positions[corner]);
+  layer.appendChild(eye);
+  setTimeout(() => eye.remove(), 1900);
+}
+
+function shakePage() {
+  if (fx.prefersReduced) return;
+  document.body.classList.remove("page-shake");
+  void document.body.offsetWidth;
+  document.body.classList.add("page-shake");
+  setTimeout(() => document.body.classList.remove("page-shake"), 550);
+}
+
+function triggerShakeOnly() {
+  shakePage();
+  safePlay(playHeartbeat);
+}
+
+function triggerBloodDrop() {
+  if (fx.prefersReduced) return;
+  const layer = document.querySelector("#scare-layer");
+  if (!layer) return;
+  const drop = document.createElement("div");
+  drop.className = "scare-blood-drop";
+  drop.style.left = `${10 + Math.random() * 80}%`;
+  layer.appendChild(drop);
+  setTimeout(() => drop.remove(), 2600);
+}
+
+/* Système de scheduling des jump scares */
+function setupJumpScares() {
+  if (fx.prefersReduced) return;
+
+  // Tous les jump scares possibles, avec poids
+  const scares = [
+    { fn: triggerLightning, weight: 3 },
+    { fn: triggerHugeBat,   weight: 2 },
+    { fn: triggerGhostFace, weight: 1 },
+    { fn: triggerWhisper,   weight: 2 },
+    { fn: triggerEye,       weight: 3 },
+    { fn: triggerShakeOnly, weight: 2 },
+    { fn: triggerBloodDrop, weight: 3 }
+  ];
+  // Pool pondéré
+  const pool = [];
+  scares.forEach(s => { for (let i = 0; i < s.weight; i++) pool.push(s.fn); });
+
+  function scheduleNext(initial = false) {
+    // Première occurrence : entre 15 et 25s
+    // Puis : entre 30 et 75s
+    const delay = initial
+      ? 15000 + Math.random() * 10000
+      : 30000 + Math.random() * 45000;
+    setTimeout(() => {
+      const fn = pool[Math.floor(Math.random() * pool.length)];
+      fn();
+      scheduleNext(false);
+    }, delay);
+  }
+  scheduleNext(true);
+}
+
+/* ============================================================
+   SCROLL EFFECTS
+   ============================================================ */
+function setupScrollEffects() {
+  const progress = document.querySelector("#scroll-progress");
+  const moon = document.querySelector(".gothic-bg .moon");
+  const castle = document.querySelector(".castle-silhouette");
+
+  let ticking = false;
+  function update() {
+    const scrollY = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (scrollY / docHeight) * 100 : 0;
+
+    // Barre de progression
+    if (progress) progress.style.setProperty("--progress", `${pct}%`);
+
+    // Parallax lune et château
+    if (!fx.prefersReduced) {
+      if (moon)   moon.style.transform   = `translateY(${scrollY * 0.15}px)`;
+      if (castle) castle.style.transform = `translateY(${scrollY * 0.05}px)`;
+    }
+
+    ticking = false;
+  }
+  window.addEventListener("scroll", () => {
+    if (!ticking) {
+      requestAnimationFrame(update);
+      ticking = true;
+    }
+  }, { passive: true });
+  update();
+}
+
+/* ============================================================
+   TILT 3D SUR LES CARDS (desktop)
+   ============================================================ */
+function setupCardTilt() {
+  const hasMouse = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  if (!hasMouse || fx.prefersReduced) return;
+
+  const selector = ".castle-card, .city-card, .budget-card, .tip, .accommodation-card, .intro-card";
+  document.querySelectorAll(selector).forEach(card => {
+    card.addEventListener("mousemove", e => {
+      const rect = card.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width;
+      const y = (e.clientY - rect.top) / rect.height;
+      const tiltX = (0.5 - y) * 8;  // max 8deg
+      const tiltY = (x - 0.5) * 8;
+      card.style.setProperty("--tilt-x", `${tiltX}deg`);
+      card.style.setProperty("--tilt-y", `${tiltY}deg`);
+      card.classList.add("tilting");
+    });
+    card.addEventListener("mouseleave", () => {
+      card.classList.remove("tilting");
+      card.style.setProperty("--tilt-x", "0deg");
+      card.style.setProperty("--tilt-y", "0deg");
+    });
+  });
+}
+
+/* ============================================================
+   CURSOR TRAIL (desktop) — petites particules rouges qui suivent
+   ============================================================ */
+function setupCursorTrail() {
+  const hasMouse = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  if (!hasMouse || fx.prefersReduced) return;
+
+  const canvas = document.querySelector("#cursor-trail");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  let w = canvas.width = window.innerWidth;
+  let h = canvas.height = window.innerHeight;
+  window.addEventListener("resize", () => {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  });
+
+  const particles = [];
+  const maxParticles = 24;
+  let mouseX = -100, mouseY = -100;
+
+  window.addEventListener("mousemove", e => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    if (particles.length < maxParticles) {
+      particles.push({
+        x: mouseX,
+        y: mouseY,
+        vx: (Math.random() - 0.5) * 1.5,
+        vy: (Math.random() - 0.5) * 1.5 + 0.5,
+        life: 1,
+        size: 2 + Math.random() * 2.5
+      });
+    }
+  });
+
+  function tick() {
+    ctx.clearRect(0, 0, w, h);
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.life -= 0.025;
+      if (p.life <= 0) { particles.splice(i, 1); continue; }
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(196, 30, 58, ${p.life * 0.55})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(tick);
+  }
+  tick();
+}
+
+/* ============================================================
+   AURA SUR LES CARDS — pulse rouge léger quand révélées
+   On l'applique après le reveal, pour ne pas tout charger d'un coup
+   ============================================================ */
+function setupCardAura() {
+  // Désactivé pour éviter trop d'animations en continu
+  // (gardé en placeholder si tu veux l'activer plus tard)
+}
+
+/* ============================================================
+   PREMIER CLIC : débloquer l'audio + offrir un éclair de bienvenue
+   ============================================================ */
+function setupFirstInteraction() {
+  let opened = false;
+  function unlock() {
+    if (opened) return;
+    opened = true;
+    // Pré-init de l'audio context
+    getAudio();
+    // Démarrer la musique d'ambiance si le son est activé
+    if (fx.soundEnabled && !fx.prefersReduced) {
+      startAmbient();
+    }
+    // Petit clin d'œil : un éclair après 2 secondes pour montrer le ton
+    setTimeout(() => {
+      if (!fx.prefersReduced && fx.soundEnabled) triggerLightning();
+    }, 2000);
+  }
+  ["click", "touchstart", "keydown", "scroll"].forEach(evt => {
+    window.addEventListener(evt, unlock, { once: true, passive: true });
+  });
+}
+
+
 function init() {
+  fx.prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   setupNavigation();
   setupTimeline();
   setupCountdown();
@@ -3906,6 +4973,15 @@ function init() {
   vampireInit();
   bearInit();
   observeReveals();
+
+  // ☠ Effets dramatiques ☠
+  setupSoundToggle();
+  setupScrollEffects();
+  setupCardTilt();
+  setupCursorTrail();
+  setupBatFlights();
+  setupJumpScares();
+  setupFirstInteraction();
 }
 
 if (document.readyState === "loading") {
