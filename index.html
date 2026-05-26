@@ -2557,6 +2557,190 @@ h1.display-title .line-3 {
   50%      { box-shadow: 4px 4px 0 var(--blood-deep), 0 0 24px rgba(196, 30, 58, 0.25); }
 }
 
+/* =================================================================
+   HAPPENING DEMONIAQUE · cartes noires + incantations + sang
+   ================================================================= */
+body.demonic-happening {
+  animation: demonic-screen-pulse 620ms steps(2, end) infinite;
+}
+
+body.demonic-happening .demonic-card {
+  position: relative;
+  overflow: visible !important;
+  isolation: isolate;
+  color: #ff1f3d !important;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(196, 30, 58, 0.16), transparent 36%),
+    radial-gradient(circle at 90% 80%, rgba(157, 78, 192, 0.14), transparent 34%),
+    #020104 !important;
+  border-color: #ff1738 !important;
+  box-shadow:
+    0 0 0 3px rgba(255, 23, 56, 0.78),
+    0 0 30px rgba(196, 30, 58, 0.62),
+    7px 7px 0 #4a0610 !important;
+  transform: translateY(-2px) rotate(var(--demonic-tilt, -0.35deg));
+  animation: card-possession 760ms steps(2, end) infinite;
+  transition:
+    background 900ms ease,
+    color 900ms ease,
+    border-color 900ms ease,
+    box-shadow 900ms ease,
+    filter 900ms ease,
+    transform 900ms cubic-bezier(.2, .8, .2, 1);
+}
+
+body.demonic-happening .demonic-card:nth-child(even) {
+  --demonic-tilt: 0.45deg;
+}
+
+body.demonic-happening .demonic-card *,
+body.demonic-happening .demonic-card h1,
+body.demonic-happening .demonic-card h2,
+body.demonic-happening .demonic-card h3,
+body.demonic-happening .demonic-card p,
+body.demonic-happening .demonic-card span,
+body.demonic-happening .demonic-card strong,
+body.demonic-happening .demonic-card small,
+body.demonic-happening .demonic-card em,
+body.demonic-happening .demonic-card li {
+  color: #ff2443 !important;
+  border-color: rgba(255, 31, 61, 0.86) !important;
+  text-shadow:
+    0 0 7px rgba(255, 31, 61, 0.72),
+    0 0 18px rgba(196, 30, 58, 0.46);
+}
+
+body.demonic-happening .demonic-card svg {
+  filter: saturate(0) brightness(0.35) sepia(1) hue-rotate(300deg) contrast(2.1);
+}
+
+body.demonic-happening .demonic-card .pill,
+body.demonic-happening .demonic-card .city-time,
+body.demonic-happening .demonic-card .bp-footer,
+body.demonic-happening .demonic-card .timeline-body li,
+body.demonic-happening .demonic-card .day-badge,
+body.demonic-happening .demonic-card .chevron,
+body.demonic-happening .demonic-card .bullet,
+body.demonic-happening .demonic-card .icon-circle,
+body.demonic-happening .demonic-card .tip-icon,
+body.demonic-happening .demonic-card .city-icon,
+body.demonic-happening .demonic-card .castle-badge {
+  background: #050208 !important;
+  box-shadow: 0 0 14px rgba(255, 23, 56, 0.36) !important;
+}
+
+.demonic-card.demonic-returning {
+  animation: none !important;
+  background: rgba(232, 220, 196, 0.35) !important;
+  box-shadow:
+    0 0 0 1px rgba(196, 30, 58, 0.18),
+    3px 3px 0 rgba(74, 6, 16, 0.35) !important;
+  filter: saturate(0.8) brightness(1.05);
+  transform: translateY(0) rotate(0deg) !important;
+  transition:
+    background 950ms ease,
+    color 950ms ease,
+    border-color 950ms ease,
+    box-shadow 950ms ease,
+    filter 950ms ease,
+    transform 950ms cubic-bezier(.2, .8, .2, 1);
+}
+
+.demonic-card.demonic-returning::after {
+  opacity: 0 !important;
+  transform: translateY(16px) scaleY(0.72);
+  transition: opacity 900ms ease, transform 900ms ease;
+}
+
+body.demonic-happening .demonic-card::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  z-index: 20;
+  pointer-events: none;
+  border-radius: calc(var(--radius) + 8px);
+  background:
+    radial-gradient(circle at 7% 1%, #ff1738 0 8px, transparent 9px),
+    radial-gradient(circle at 18% 0%, #7d0a1a 0 11px, transparent 12px),
+    radial-gradient(circle at 34% 2%, #ff1738 0 6px, transparent 7px),
+    radial-gradient(circle at 51% 0%, #a80f24 0 13px, transparent 14px),
+    radial-gradient(circle at 68% 1%, #ff1738 0 8px, transparent 9px),
+    radial-gradient(circle at 83% 0%, #7d0a1a 0 12px, transparent 13px),
+    radial-gradient(circle at 96% 2%, #ff1738 0 7px, transparent 8px),
+    linear-gradient(#c41e3a, #7d0a1a) top / 100% 8px no-repeat,
+    linear-gradient(#7d0a1a, #4a0610) left / 7px 100% no-repeat,
+    linear-gradient(#7d0a1a, #4a0610) right / 7px 100% no-repeat,
+    linear-gradient(#4a0610, #7d0a1a) bottom / 100% 7px no-repeat,
+    linear-gradient(180deg, #c41e3a 0 24px, transparent 25px) 12% 0 / 9px 62px no-repeat,
+    linear-gradient(180deg, #ff1738 0 36px, transparent 37px) 47% 0 / 12px 92px no-repeat,
+    linear-gradient(180deg, #7d0a1a 0 28px, transparent 29px) 76% 0 / 10px 74px no-repeat;
+  filter: drop-shadow(0 6px 8px rgba(196, 30, 58, 0.55));
+  animation: blood-border-drip 920ms ease-in-out infinite alternate;
+}
+
+.demonic-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 260;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  opacity: 0;
+  color: #ff1738;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(196, 30, 58, 0.18), transparent 32%),
+    radial-gradient(circle at 50% 52%, transparent 0 18%, rgba(0, 0, 0, 0.44) 58%, rgba(0, 0, 0, 0.82) 100%);
+  transition: opacity 180ms ease;
+}
+
+body.demonic-happening .demonic-veil {
+  opacity: 1;
+  animation: veil-flicker 560ms steps(2, end) infinite;
+}
+
+.demonic-veil::before {
+  content: "IN TENEBRIS SURGIT";
+  padding: 12px 18px;
+  border: 2px solid rgba(255, 23, 56, 0.58);
+  border-radius: 999px;
+  color: #ff1738;
+  background: rgba(2, 1, 4, 0.72);
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 7vw, 4.8rem);
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-shadow:
+    0 0 12px rgba(255, 23, 56, 0.8),
+    0 0 34px rgba(196, 30, 58, 0.7);
+  transform: rotate(-1deg);
+  animation: invocation-pop 900ms cubic-bezier(.34, 1.5, .64, 1) infinite alternate;
+}
+
+@keyframes card-possession {
+  0%, 100% { filter: contrast(1) brightness(0.95); }
+  50% { filter: contrast(1.35) brightness(1.15); }
+}
+
+@keyframes blood-border-drip {
+  0% { transform: translateY(0); opacity: 0.86; }
+  100% { transform: translateY(5px); opacity: 1; }
+}
+
+@keyframes demonic-screen-pulse {
+  0%, 100% { background-color: var(--night); }
+  50% { background-color: #180006; }
+}
+
+@keyframes veil-flicker {
+  0%, 100% { opacity: 0.82; }
+  50% { opacity: 0.56; }
+}
+
+@keyframes invocation-pop {
+  0% { transform: rotate(-1deg) scale(0.98); }
+  100% { transform: rotate(1deg) scale(1.04); }
+}
+
 /* Lettres qui dégoulinent au hover sur les fraktur-h (desktop) */
 @media (hover: hover) and (pointer: fine) {
   .fraktur-h {
@@ -4239,6 +4423,9 @@ function setupKeyboardEgg() {
    ============================================================ */
 const ambient = {
   isPlaying: false,
+  audio: null,
+  fadeTimer: null,
+  pausedForHappening: false,
   masterGain: null,
   droneNodes: [],
   melodyTimer: null,
@@ -4396,46 +4583,86 @@ function scheduleMelody(ctx) {
 }
 
 function startAmbient() {
-  if (ambient.isPlaying) return;
-  const ctx = getAudio();
-  if (!ctx) return;
-  if (ctx.state === "suspended") ctx.resume();
+  if (ambient.isPlaying) return Promise.resolve();
+  ensureAmbientAudio();
   ambient.isPlaying = true;
-  setupAmbientBus(ctx);
-  startDrone(ctx);
-  scheduleMelody(ctx);
-  // Fade-in du master
-  const now = ctx.currentTime;
-  ambient.masterGain.gain.setValueAtTime(0, now);
-  ambient.masterGain.gain.linearRampToValueAtTime(0.5, now + 4);
+  ambient.audio.muted = false;
+  return ambient.audio.play()
+    .then(() => fadeAmbientTo(0.42, 1600))
+    .catch(() => {
+      ambient.isPlaying = false;
+      throw new Error("ambient-autoplay-blocked");
+    });
 }
 
-function stopAmbient() {
-  if (!ambient.isPlaying) return;
-  const ctx = getAudio();
-  if (!ctx) return;
-  ambient.isPlaying = false;
-  if (ambient.melodyTimer) clearTimeout(ambient.melodyTimer);
-  ambient.melodyIndex = 0;
+function ensureAmbientAudio() {
+  if (ambient.audio) return ambient.audio;
+  ambient.audio = new Audio("Bougie de Dracula.mp3");
+  ambient.audio.loop = true;
+  ambient.audio.autoplay = true;
+  ambient.audio.preload = "auto";
+  ambient.audio.volume = 0;
+  return ambient.audio;
+}
 
-  // Fade-out puis cleanup
-  const now = ctx.currentTime;
-  if (ambient.masterGain) {
-    ambient.masterGain.gain.cancelScheduledValues(now);
-    ambient.masterGain.gain.setValueAtTime(ambient.masterGain.gain.value, now);
-    ambient.masterGain.gain.linearRampToValueAtTime(0, now + 1.2);
-  }
-  setTimeout(() => {
-    ambient.droneNodes.forEach(node => {
-      try {
-        node.osc.stop();
-        node.oscDetune.stop();
-        node.lfo.stop();
-      } catch (e) {}
+function tryStartAmbientOnLoad() {
+  if (!fx.soundEnabled || fx.prefersReduced) return;
+  startAmbient().catch(() => {
+    toast("Clique une fois sur la page pour lancer la musique.");
+  });
+}
+
+function stopAmbient(options = {}) {
+  if (!ambient.isPlaying) return;
+  ambient.isPlaying = false;
+  const audio = ambient.audio;
+  if (!audio) return;
+  const duration = options.fast ? 180 : 900;
+  fadeAmbientTo(0, duration, () => {
+    audio.pause();
+    if (!options.keepPosition) audio.currentTime = 0;
+  });
+}
+
+function unlockAmbientAudio() {
+  const audio = ensureAmbientAudio();
+  if (!audio) return Promise.resolve();
+  const previousVolume = audio.volume;
+  audio.volume = 0.001;
+  return audio.play()
+    .then(() => {
+      if (!ambient.isPlaying) {
+        audio.pause();
+        audio.currentTime = 0;
+        audio.volume = previousVolume;
+      } else {
+        fadeAmbientTo(0.42, 900);
+      }
+    })
+    .catch(() => {
+      audio.volume = previousVolume;
     });
-    ambient.droneNodes = [];
-    if (ambient.masterGain) { ambient.masterGain.disconnect(); ambient.masterGain = null; }
-  }, 1300);
+}
+
+function fadeAmbientTo(targetVolume, duration = 700, done) {
+  const audio = ambient.audio;
+  if (!audio) {
+    if (done) done();
+    return;
+  }
+  clearInterval(ambient.fadeTimer);
+  const startVolume = audio.volume;
+  const start = performance.now();
+  ambient.fadeTimer = setInterval(() => {
+    const pct = Math.min(1, (performance.now() - start) / duration);
+    audio.volume = startVolume + (targetVolume - startVolume) * pct;
+    if (pct >= 1) {
+      clearInterval(ambient.fadeTimer);
+      ambient.fadeTimer = null;
+      audio.volume = targetVolume;
+      if (done) done();
+    }
+  }, 32);
 }
 
 
@@ -4462,7 +4689,10 @@ function setupSoundToggle() {
     try { localStorage.setItem("trans-sound", fx.soundEnabled ? "on" : "off"); } catch (e) {}
     if (fx.soundEnabled) {
       toast("🎼 Son activé · musique d'ambiance");
-      startAmbient();
+      unlockDemonAudio();
+      startAmbient().catch(() => {
+        toast("Clique une fois sur la page pour lancer la musique.");
+      });
     } else {
       toast("🔇 Silence sépulcral");
       stopAmbient();
@@ -4676,8 +4906,21 @@ function triggerLightning() {
   flash.classList.remove("flashing");
   void flash.offsetWidth; // reflow
   flash.classList.add("flashing");
-  safePlay(playThunder);
   setTimeout(() => flash.classList.remove("flashing"), 600);
+}
+
+function setupFrequentLightning() {
+  if (fx.prefersReduced) return;
+  function scheduleNext(initial = false) {
+    const delay = initial
+      ? 5000 + Math.random() * 5000
+      : 12000 + Math.random() * 14000;
+    setTimeout(() => {
+      triggerLightning();
+      scheduleNext(false);
+    }, delay);
+  }
+  scheduleNext(true);
 }
 
 function triggerHugeBat() {
@@ -4787,7 +5030,7 @@ function setupJumpScares() {
 
   // Tous les jump scares possibles, avec poids
   const scares = [
-    { fn: triggerLightning, weight: 3 },
+    { fn: triggerLightning, weight: 7 },
     { fn: triggerHugeBat,   weight: 2 },
     { fn: triggerGhostFace, weight: 1 },
     { fn: triggerWhisper,   weight: 2 },
@@ -4800,11 +5043,11 @@ function setupJumpScares() {
   scares.forEach(s => { for (let i = 0; i < s.weight; i++) pool.push(s.fn); });
 
   function scheduleNext(initial = false) {
-    // Première occurrence : entre 15 et 25s
-    // Puis : entre 30 et 75s
+    // Première occurrence : entre 12 et 20s
+    // Puis : entre 24 et 50s
     const delay = initial
-      ? 15000 + Math.random() * 10000
-      : 30000 + Math.random() * 45000;
+      ? 12000 + Math.random() * 8000
+      : 24000 + Math.random() * 26000;
     setTimeout(() => {
       const fn = pool[Math.floor(Math.random() * pool.length)];
       fn();
@@ -4939,6 +5182,220 @@ function setupCardAura() {
 }
 
 /* ============================================================
+   HAPPENING DEMONIAQUE · premier à 20s, puis toutes les minutes
+   ============================================================ */
+const demonicHappening = {
+  active: false,
+  timer: null,
+  restoreTimer: null,
+  restore: [],
+  audio: null,
+  audioUnlocked: false,
+  minDuration: 7000,
+  selector: [
+    ".ribbon-stats article",
+    ".hero-card",
+    ".boarding-pass",
+    ".timeline-item",
+    ".castle-card",
+    ".city-card",
+    ".budget-card",
+    ".tip",
+    ".phrase",
+    ".sources"
+  ].join(", "),
+  incantations: [
+    "Sanguis vocat",
+    "Noctis porta aperitur",
+    "Umbra regnat",
+    "Vlad te videt",
+    "Carpathia tremit",
+    "In tenebris surgo",
+    "Ossa susurrant",
+    "Cruor descendit",
+    "Luna atra clamat",
+    "Maledictio iterum",
+    "Silva audit",
+    "Daemon ridebit",
+    "Nomen tuum deletur",
+    "Cor ardeat rubrum",
+    "Sub castro dormi",
+    "Lux cadit"
+  ]
+};
+
+function setupDemonicHappening() {
+  const cards = document.querySelectorAll(demonicHappening.selector);
+  if (!cards.length) return;
+
+  demonicHappening.audio = new Audio("Demon Sound Effect.mp3");
+  demonicHappening.audio.preload = "auto";
+  demonicHappening.audio.volume = 0.92;
+
+  const veil = document.createElement("div");
+  veil.className = "demonic-veil";
+  veil.setAttribute("aria-hidden", "true");
+  document.body.appendChild(veil);
+
+  function scheduleNext(delay = 60000) {
+    clearTimeout(demonicHappening.timer);
+    demonicHappening.timer = setTimeout(() => {
+      triggerDemonicHappening();
+      scheduleNext(60000);
+    }, delay);
+  }
+
+  scheduleNext(20000);
+  setupDemonAudioUnlock();
+}
+
+function randomIncantation(index) {
+  const text = demonicHappening.incantations[index % demonicHappening.incantations.length];
+  const suffix = index % 3 === 0 ? "..." : index % 3 === 1 ? "!" : "";
+  return text.toUpperCase() + suffix;
+}
+
+function shouldPossessTextNode(node) {
+  if (!node.nodeValue.trim()) return false;
+  const parent = node.parentElement;
+  if (!parent) return false;
+  return !parent.closest("script, style, svg, canvas, audio, video");
+}
+
+function possessCardText(card, cardIndex) {
+  const walker = document.createTreeWalker(card, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      return shouldPossessTextNode(node)
+        ? NodeFilter.FILTER_ACCEPT
+        : NodeFilter.FILTER_REJECT;
+    }
+  });
+
+  let localIndex = 0;
+  while (walker.nextNode()) {
+    const node = walker.currentNode;
+    demonicHappening.restore.push([node, node.nodeValue]);
+    node.nodeValue = randomIncantation(cardIndex + localIndex);
+    localIndex += 1;
+  }
+}
+
+function restoreDemonicText() {
+  demonicHappening.restore.forEach(([node, value]) => {
+    node.nodeValue = value;
+  });
+  demonicHappening.restore = [];
+}
+
+function playDemonSound() {
+  const audio = demonicHappening.audio;
+  if (!audio) return Promise.resolve();
+  audio.pause();
+  audio.currentTime = 0;
+  audio.muted = false;
+  audio.volume = 0.92;
+  return audio.play().then(() => {
+    demonicHappening.audioUnlocked = true;
+  }).catch(() => {
+    toast("Clique une fois sur la page pour libérer le démon sonore.");
+  });
+}
+
+function unlockDemonAudio() {
+  const audio = demonicHappening.audio;
+  if (!audio || demonicHappening.audioUnlocked) return Promise.resolve();
+
+  audio.pause();
+  audio.currentTime = 0;
+  audio.muted = false;
+  audio.volume = 0.001;
+
+  return audio.play()
+    .then(() => {
+      audio.pause();
+      audio.currentTime = 0;
+      audio.volume = 0.92;
+      demonicHappening.audioUnlocked = true;
+    })
+    .catch(() => {
+      audio.volume = 0.92;
+    });
+}
+
+function setupDemonAudioUnlock() {
+  const unlock = () => {
+    unlockDemonAudio().then(() => {
+      if (demonicHappening.audioUnlocked) {
+        ["pointerdown", "click", "touchstart", "keydown"].forEach(evt => {
+          window.removeEventListener(evt, unlock, true);
+        });
+      }
+    });
+  };
+  ["pointerdown", "click", "touchstart", "keydown"].forEach(evt => {
+    window.addEventListener(evt, unlock, { capture: true, passive: true });
+  });
+}
+
+function triggerDemonicHappening() {
+  if (demonicHappening.active) return;
+  const cards = Array.from(document.querySelectorAll(demonicHappening.selector));
+  if (!cards.length) return;
+
+  demonicHappening.active = true;
+  clearTimeout(demonicHappening.restoreTimer);
+  demonicHappening.restore = [];
+  ambient.pausedForHappening = ambient.isPlaying;
+  if (ambient.pausedForHappening) {
+    stopAmbient({ fast: true, keepPosition: true });
+  }
+  document.body.classList.add("demonic-happening", "page-shake");
+
+  cards.forEach((card, index) => {
+    card.classList.add("demonic-card");
+    possessCardText(card, index * 3);
+  });
+
+  playDemonSound();
+
+  const audio = demonicHappening.audio;
+  const duration = audio && Number.isFinite(audio.duration) && audio.duration > 0
+    ? Math.max(demonicHappening.minDuration, audio.duration * 1000)
+    : demonicHappening.minDuration;
+
+  clearTimeout(triggerDemonicHappening.endTimer);
+  triggerDemonicHappening.endTimer = setTimeout(endDemonicHappening, duration);
+}
+
+function endDemonicHappening() {
+  if (!demonicHappening.active) return;
+  demonicHappening.active = false;
+  clearTimeout(triggerDemonicHappening.endTimer);
+
+  if (demonicHappening.audio) {
+    demonicHappening.audio.pause();
+    demonicHappening.audio.currentTime = 0;
+  }
+
+  document.body.classList.remove("demonic-happening", "page-shake");
+  const possessedCards = document.querySelectorAll(".demonic-card");
+  possessedCards.forEach(card => card.classList.add("demonic-returning"));
+
+  demonicHappening.restoreTimer = setTimeout(() => {
+    restoreDemonicText();
+    possessedCards.forEach(card => {
+      card.classList.remove("demonic-card", "demonic-returning");
+    });
+    if (ambient.pausedForHappening && fx.soundEnabled && !fx.prefersReduced) {
+      ambient.pausedForHappening = false;
+      startAmbient();
+    } else {
+      ambient.pausedForHappening = false;
+    }
+  }, 950);
+}
+
+/* ============================================================
    PREMIER CLIC : débloquer l'audio + offrir un éclair de bienvenue
    ============================================================ */
 function setupFirstInteraction() {
@@ -4948,9 +5405,12 @@ function setupFirstInteraction() {
     opened = true;
     // Pré-init de l'audio context
     getAudio();
+    unlockDemonAudio();
     // Démarrer la musique d'ambiance si le son est activé
     if (fx.soundEnabled && !fx.prefersReduced) {
-      startAmbient();
+      startAmbient().catch(() => {
+        unlockAmbientAudio();
+      });
     }
     // Petit clin d'œil : un éclair après 2 secondes pour montrer le ton
     setTimeout(() => {
@@ -4981,7 +5441,10 @@ function init() {
   setupCursorTrail();
   setupBatFlights();
   setupJumpScares();
+  setupFrequentLightning();
+  setupDemonicHappening();
   setupFirstInteraction();
+  tryStartAmbientOnLoad();
 }
 
 if (document.readyState === "loading") {
